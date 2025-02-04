@@ -11,15 +11,15 @@ a small plugin to flatten the json object to show on a window.
 - Use `:FlatJson` to flat the json and print on the window
 - Use `q` to quit the window
 
-[!TODO]
-
+> [!TODO]
+>
 > to create a parser using `lua` instead
 
-[!NOTE]
-
+> [!NOTE]
+>
 > a very big executable parser at `lua/flatjson`
 > which compiled down from `deno compile --allow-read lua/flatjson.ts`
 
-[!WARNING]
-
+> [!WARNING]
+>
 > might be too big to install
