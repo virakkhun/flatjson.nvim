@@ -1,5 +1,25 @@
 local M = {}
 
+-- a function flatten table
+local function flattenTable(table, prefix)
+	local flattened = {}
+	prefix = prefix or "" -- Handle cases where no prefix is provided
+
+	for k, v in pairs(table) do
+		local newKey = prefix .. k
+		if type(v) == "table" then
+			-- Recursively flatten nested tables
+			local nestedFlattened = flattenTable(v, newKey .. ".")
+			for nk, nv in pairs(nestedFlattened) do
+				flattened[nk] = nv
+			end
+		else
+			flattened[newKey] = v
+		end
+	end
+	return flattened
+end
+
 local _setup = function()
 	local treesitter = vim.treesitter
 
