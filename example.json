@@ -1,0 +1,24 @@
+{
+  "level1": {
+    "level2a": {
+      "level3a": {
+        "level4a": "value4a",
+        "level4b": 123
+      },
+      "level3b": {
+        "level4c": true,
+        "level4d": null
+      }
+    },
+    "level2b": {
+      "level3c": {
+        "level4e": "another value",
+        "level4f": [1, 2, 3]
+      },
+      "level3d": {
+        "level4g": { "nested": "object" },
+        "level4h": 3.14159
+      }
+    }
+  }
+}
