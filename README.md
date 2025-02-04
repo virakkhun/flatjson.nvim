@@ -11,10 +11,6 @@ a small plugin to flatten the json object to show on a window.
 - Use `:FlatJson` to flat the json and print on the window
 - Use `q` to quit the window
 
-> [!TODO]
->
-> to create a parser using `lua` instead
-
 > [!NOTE]
 >
 > a very big executable parser at `lua/flatjson`
