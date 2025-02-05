@@ -8,7 +8,7 @@ a small plugin to flatten the json object to show on a window.
 
 ## Usage
 
-- Use `:FlatJson` to flat the json and print on the window
+- Use `:FlatJSON` to flat the json and print on the window
 - Use `q` to quit the window
 
 ## Installation
