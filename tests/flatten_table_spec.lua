@@ -31,13 +31,15 @@ describe("flatten_table", function()
 		"it should return expected table of { ['level1__level2__level3__level4'] = 'hi just here', ['level1__level2__level3__level4a__theend'] = 'just ended' }",
 		function()
 			local flatted = f.flat(t, "__")
-			eq(
-				flatted,
-				{
-					["level1__level2__level3__level4"] = "hi just here",
-					["level1__level2__level3__level4a__theend"] = "just ended",
-				}
-			)
+			eq(flatted, {
+				["level1__level2__level3__level4"] = "hi just here",
+				["level1__level2__level3__level4a__theend"] = "just ended",
+			})
 		end
 	)
+
+	it("it should flat array value to [1, 2, 3, 4]", function()
+		local flatted = f.flat({ nested = { array = { 1, 2, 3, 4 } } }, "-")
+		eq(flatted, { ["nested-array"] = "[1, 2, 3, 4]" })
+	end)
 end)
