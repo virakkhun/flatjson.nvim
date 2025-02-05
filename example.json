@@ -13,12 +13,10 @@
     "level2b": {
       "level3c": {
         "level4e": "another value",
-        "level4f": [1, 2, 3]
+        "arrayValue": [1, 2, 3]
       },
-      "level3d": {
-        "level4g": { "nested": "object" },
-        "level4h": 3.14159
-      }
+      "level3d": { "level4g": { "nested": "object" }, "level4h": 3.14159 },
+      "anotherArrayValue": [1, 2, 3]
     }
   }
 }

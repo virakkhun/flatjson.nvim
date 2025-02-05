@@ -11,9 +11,11 @@ a small plugin to flatten the json object to show on a window.
 - Use `:FlatJson` to flat the json and print on the window
 - Use `q` to quit the window
 
-> [!WARNING]
-> might be too big to be installed
+## Why??
 
-> [!NOTE]
-> a very big executable parser at `lua/flatjson`
-> which compiled down from `deno compile --allow-read lua/flatjson.ts`
+Working with i18n I often find it's hard to find a key with very nested object
+while we store it inside the json file. **SO HERE I THINK IT WILL HELP ME A BIT**
+
+## Inspiration of plugin creation ✨
+
+[tj devries's plugin creation yt video](https://youtu.be/VGid4aN25iI?si=Gk8ZCYMA0eky7M-N)
