@@ -20,13 +20,17 @@ end
 ---@return string
 ---concat key and value as json format
 local function json_key_value(key, value)
+	local dirty_value = tostring(value) == "vim.NIL" and "null" or tostring(value)
+	local removed_double_quote = dirty_value:gsub('%"', "'")
+	local clean_value = removed_double_quote:gsub("%\n", "\r")
+
 	return table.concat({
 		'  "',
 		tostring(key),
 		'"',
 		": ",
 		'"',
-		tostring(value) == "vim.NIL" and "null" or tostring(value),
+		clean_value,
 		'",',
 	})
 end
@@ -72,7 +76,8 @@ local _setup = function()
 	table.insert(flatted_content, 1, "{")
 	table.insert(flatted_content, "}")
 
-	vim.api.nvim_buf_set_lines(window.buf, 0, -1, false, flatted_content)
+	local total_lines = vim.tbl_count(flatted_content)
+	vim.api.nvim_buf_set_lines(window.buf, 0, total_lines, false, flatted_content)
 
 	treesitter.start(window.buf, "json")
 
