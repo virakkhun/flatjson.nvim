@@ -30,14 +30,14 @@ local window = {
 		height = bh,
 		row = brow,
 		col = bcol,
-		border = "rounded",
+		border = "single",
 		style = "minimal",
 		zindex = 1,
 	},
 	---@type vim.api.keyset.win_config
 	header = {
 		relative = "editor",
-		width = body_w,
+		width = bw,
 		height = 1,
 		row = math.floor(sh * 0.1),
 		col = body_col,
