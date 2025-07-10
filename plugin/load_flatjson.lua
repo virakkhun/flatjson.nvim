@@ -1,7 +1,13 @@
-vim.api.nvim_create_user_command("FlatJson", function()
+vim.api.nvim_create_user_command("FlatJson", function(args)
 	package.loaded["flatjson"] = nil
-	require("flatjson").setup()
-end, {})
+	local arg = args.args == "" and "default" or args.args
+	require("flatjson").setup(arg)
+end, {
+	nargs = "*",
+	complete = function()
+		return { "key", "default" }
+	end,
+})
 
 vim.api.nvim_create_autocmd("BufEnter", {
 	pattern = "*.json",

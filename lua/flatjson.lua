@@ -12,7 +12,7 @@ local col = math.floor(sw * 1)
 ---@param value unknown
 ---@return string
 ---concat key and value as json format
-local function json_key_value(key, value)
+function M.json_key_value(key, value)
 	local dirty_value = tostring(value) == "vim.NIL" and "null" or tostring(value)
 	local removed_double_quote = dirty_value:gsub('%"', "'")
 	local clean_value = removed_double_quote:gsub("%\n", "\r")
@@ -27,77 +27,6 @@ local function json_key_value(key, value)
 		clean_value,
 		'",',
 	})
-end
-
-local _setup = function()
-	local cur_bufnr = vim.api.nvim_get_current_buf()
-	local cur_buf_name = vim.fn.bufname(cur_bufnr)
-	local is_not_json_file = vim.bo.filetype ~= "json"
-
-	if is_not_json_file then
-		vim.notify("Only work with json...✨", vim.log.levels.INFO, {})
-		return
-	end
-
-	local file = io.open(cur_buf_name, "r")
-
-	if file == nil then
-		vim.notify("Unable to read file at " .. cur_buf_name, vim.log.levels.ERROR, {})
-		return
-	end
-
-	local lines = {}
-	local result = file:lines()
-
-	for line in result do
-		table.insert(lines, line)
-	end
-
-	local stringify = table.concat(lines)
-	local decoded_table = vim.json.decode(stringify)
-	local flatted_table = flatten_table.flat(decoded_table, ".")
-	local flatted_content = {}
-
-	for key, value in pairs(flatted_table) do
-		local v = json_key_value(key, value)
-		table.insert(flatted_content, v)
-	end
-
-	local window = M.create_win()
-
-	local title = M.centered_title()
-	local divider = M.create_divider(sw)
-
-	local headers = {
-		string.rep(" ", sw),
-		title,
-		string.rep(" ", sw),
-		divider,
-		string.rep(" ", sw),
-	}
-
-	vim.api.nvim_buf_set_lines(window.buf, 0, -1, false, headers)
-
-	M.hl(window.buf, 1, 0, 1, #title, M.title_hlg)
-	M.hl(window.buf, 3, 0, 3, #divider, M.divider_hlg)
-
-	vim.api.nvim_buf_set_lines(window.buf, vim.tbl_count(headers), -1, false, flatted_content)
-
-	for key, value in ipairs(flatted_content) do
-		local linenr = key + 4
-		local colonPos = string.find(value, ":")
-
-		M.hl(window.buf, linenr, 0, linenr, colonPos, M.json_key_hlg)
-		M.hl(window.buf, linenr, colonPos + 1, linenr, #value, M.json_value_hlg)
-	end
-
-	M.listen_on_cursor_moved(window.buf)
-
-	M.close_win_on(window.buf, window.win, "<Esc>")
-	M.close_win_on(window.buf, window.win, "q")
-	vim.bo[window.buf].modifiable = false
-
-	file:close()
 end
 
 function M.create_win()
@@ -176,6 +105,85 @@ function M.override_normal_float()
 	})
 end
 
-M.setup = _setup
+---@param args 'default' | 'key'
+function M.setup(args)
+	local cur_bufnr = vim.api.nvim_get_current_buf()
+	local cur_buf_name = vim.fn.bufname(cur_bufnr)
+	local is_not_json_file = vim.bo.filetype ~= "json"
+
+	if is_not_json_file then
+		vim.notify("Only work with json...✨", vim.log.levels.INFO, {})
+		return
+	end
+
+	local file = io.open(cur_buf_name, "r")
+
+	if file == nil then
+		vim.notify("Unable to read file at " .. cur_buf_name, vim.log.levels.ERROR, {})
+		return
+	end
+
+	local lines = {}
+	local result = file:lines()
+
+	for line in result do
+		table.insert(lines, line)
+	end
+
+	local stringify = table.concat(lines)
+	local decoded_table = vim.json.decode(stringify)
+	local flatted_table = flatten_table.flat(decoded_table, ".")
+	local flatted_content = {}
+
+	if args == "default" then
+		for key, value in pairs(flatted_table) do
+			local v = M.json_key_value(key, value)
+			table.insert(flatted_content, v)
+		end
+	else
+		for key, _ in pairs(flatted_table) do
+			table.insert(flatted_content, key)
+		end
+	end
+
+	local window = M.create_win()
+
+	local title = M.centered_title()
+	local divider = M.create_divider(sw)
+
+	local headers = {
+		string.rep(" ", sw),
+		title,
+		string.rep(" ", sw),
+		divider,
+		string.rep(" ", sw),
+	}
+
+	vim.api.nvim_buf_set_lines(window.buf, 0, -1, false, headers)
+
+	M.hl(window.buf, 1, 0, 1, #title, M.title_hlg)
+	M.hl(window.buf, 3, 0, 3, #divider, M.divider_hlg)
+
+	vim.api.nvim_buf_set_lines(window.buf, vim.tbl_count(headers), -1, false, flatted_content)
+
+	for key, value in ipairs(flatted_content) do
+		local linenr = key + 4
+		if args == "default" then
+			local colonPos = string.find(value, ":")
+			M.hl(window.buf, linenr, 0, linenr, colonPos, M.json_key_hlg)
+			M.hl(window.buf, linenr, colonPos + 1, linenr, #value, M.json_value_hlg)
+		else
+			M.hl(window.buf, linenr, 0, linenr, #value, M.json_key_hlg)
+		end
+	end
+
+	M.listen_on_cursor_moved(window.buf)
+
+	M.close_win_on(window.buf, window.win, "<Esc>")
+	M.close_win_on(window.buf, window.win, "q")
+	vim.bo[window.buf].modifiable = false
+
+	file:close()
+end
 
 return M
